@@ -8,6 +8,23 @@ class RobotSafetyException extends Exception {
 
 public class FactoryRobotHazardAnalyzer {
 
+    private static final double WORN_RISK_FACTOR = 1.3;
+    private static final double FAULTY_RISK_FACTOR = 2.0;
+    private static final double CRITICAL_RISK_FACTOR = 3.0;
+
+    public static double getMachineRiskFactor(String machineryState) throws RobotSafetyException {
+        switch (machineryState) {
+            case "Worn":
+                return WORN_RISK_FACTOR;
+            case "Faulty":
+                return FAULTY_RISK_FACTOR;
+            case "Critical":
+                return CRITICAL_RISK_FACTOR;
+            default:
+                throw new RobotSafetyException("Error: Unsupported machinery state");
+        }
+    }
+
     public static double calculateHazardRisk(double armPrecision, int workerDensity, String machineryState)
             throws RobotSafetyException {
 
@@ -19,17 +36,7 @@ public class FactoryRobotHazardAnalyzer {
             throw new RobotSafetyException("Error: Worker density must be 1-20");
         }
 
-        double machineRiskFactor = 0.0;
-        if (machineryState.equals("Worn")) {
-            machineRiskFactor = 1.3;
-        } else if (machineryState.equals("Faulty")) {
-            machineRiskFactor = 2.0;
-        } else if (machineryState.equals("Critical")) {
-            machineRiskFactor = 3.0;
-        } else {
-            throw new RobotSafetyException("Error: Unsupported machinery state");
-        }
-
+        double machineRiskFactor = getMachineRiskFactor(machineryState);
         return ((1.0 - armPrecision) * 15.0) + (workerDensity * machineRiskFactor);
     }
 
