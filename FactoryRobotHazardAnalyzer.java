@@ -14,7 +14,21 @@ public class FactoryRobotHazardAnalyzer {
         scanner.nextLine();
         String machineryState = scanner.nextLine();
 
-        // Determine machine risk factor
+        // Validate arm precision
+        if (armPrecision < 0.0 || armPrecision > 1.0) {
+            System.out.println("Error: Arm precision must be 0.0-1.0");
+            scanner.close();
+            return;
+        }
+
+        // Validate worker density
+        if (workerDensity < 1 || workerDensity > 20) {
+            System.out.println("Error: Worker density must be 1-20");
+            scanner.close();
+            return;
+        }
+
+        // Validate machinery state and get risk factor
         double machineRiskFactor = 0.0;
         if (machineryState.equals("Worn")) {
             machineRiskFactor = 1.3;
@@ -22,6 +36,10 @@ public class FactoryRobotHazardAnalyzer {
             machineRiskFactor = 2.0;
         } else if (machineryState.equals("Critical")) {
             machineRiskFactor = 3.0;
+        } else {
+            System.out.println("Error: Unsupported machinery state");
+            scanner.close();
+            return;
         }
 
         // Calculate hazard risk
